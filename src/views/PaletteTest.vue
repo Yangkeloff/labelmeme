@@ -5,7 +5,6 @@
     </div>
     <div class="panel-body">
       <div class="demo">
-        <canvas id="canvas" :width="width" :height="height"></canvas>
         <div class="draw-btn-group">
           <div :class="{active:drawType==''}" title="自由选择" @click="drawTypeChange('')">
             <i class="draw-icon icon-mouse"></i>
@@ -44,6 +43,7 @@
             <i class="draw-icon icon-json_save"></i>
           </div>
         </div>
+        <canvas id="canvas" :width="width" :height="height"></canvas>
       </div>
     </div>
     <input type="file" @change="uploadImgChange" id="imgInput" accept="image/*" />
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import FileSaver from 'file-saver'
 export default {
   name: 'paletteTest',
   data () {
@@ -101,7 +102,10 @@ export default {
   methods: {
     // 导出json
     output () {
-      console.log(this.canvas.toObject())
+      const jsonData = JSON.stringify(this.canvas.toJSON())
+      //   const jsonData = JSON.stringify(this.canvas.toObject())
+      const blob = new Blob([jsonData], { type: '' })
+      FileSaver.saveAs(blob, `${this.imgFile.name}.json`)
     },
     // 保存当前画布为png图片
     save () {
@@ -610,8 +614,8 @@ input {
 }
 .demo {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+//   flex-direction: column;
+//   align-items: center;
 }
 canvas {
   border: 1px dashed black;
@@ -619,9 +623,10 @@ canvas {
 .draw-btn-group {
   // width: 1270px;
   margin-top: 10px;
+  margin-right: 10px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
   & > div {
     background: #fafafa;
     cursor: pointer;
