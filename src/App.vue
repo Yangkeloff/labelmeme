@@ -4,7 +4,18 @@
   </div>
 </template>
 
-<style>
+<style lang="less">
+.pure_btn{
+  border: none !important;
+  color: transparent !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  padding: 0 !important;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

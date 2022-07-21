@@ -1,8 +1,5 @@
 <template>
   <div class="maintenancePlanAdd">
-    <div class="child-panel-title">
-      <h2>标注</h2>
-    </div>
     <div class="panel-body">
       <div class="demo">
         <div class="draw-btn-group">
@@ -15,13 +12,16 @@
           <div :class="{active:drawType=='text'}" title="文本输入框" @click="drawTypeChange('text')">
             <i class="draw-icon icon-2"></i>
           </div>
-          <div :class="{active:drawType=='ellipse'}" title="画圆" @click="drawTypeChange('ellipse')">
+          <div :class="{active:drawType=='circle'}" title="圆" @click="drawTypeChange('ellipse')">
             <i class="draw-icon icon-3"></i>
           </div>
-          <div :class="{active:drawType=='rectangle'}" title="画矩形" @click="drawTypeChange('rectangle')">
+          <div :class="{active:drawType=='ellipse'}" title="椭圆" @click="drawTypeChange('ellipse')">
+            <i class="draw-icon icon-3"></i>
+          </div>
+          <div :class="{active:drawType=='rectangle'}" title="矩形" @click="drawTypeChange('rectangle')">
             <i class="draw-icon icon-4"></i>
           </div>
-          <div :class="{active:drawType=='polygon'}" title="画多边形" @click="drawPolygon">
+          <div :class="{active:drawType=='polygon'}" title="多边形" @click="drawPolygon">
             <i class="draw-icon icon-6"></i>
           </div>
           <!-- <div :class="{active:drawType=='pen'}" title="笔画" @click="drawTypeChange('pen')">
@@ -102,6 +102,7 @@ export default {
   methods: {
     // 导出json
     output () {
+      console.log(this.canvas.toObject())
       const jsonData = JSON.stringify(this.canvas.toJSON())
       //   const jsonData = JSON.stringify(this.canvas.toObject())
       const blob = new Blob([jsonData], { type: '' })
@@ -393,6 +394,7 @@ export default {
       this.drawType = null
     },
     drawing (e) {
+      let rect
       if (this.drawingObject) {
         this.canvas.remove(this.drawingObject)
       }
@@ -556,7 +558,7 @@ export default {
   },
   mounted () {
     this.canvas = new fabric.Canvas('canvas', {
-      // skipTargetFind: false, //当为真时，跳过目标检测。目标检测将返回始终未定义。点击选择将无效
+      skipTargetFind: false // 当为真时，跳过目标检测。目标检测将返回始终未定义。点击选择将无效
       // selectable: false,  //为false时，不能选择对象进行修改
       // selection: false   // 是否可以多个对象为一组
     })
@@ -605,6 +607,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.maintenancePlanAdd{
+  box-sizing: border-box;
+}
 .el-container {
   flex-direction: column;
 }
