@@ -28,6 +28,7 @@ export default {
 
 <style lang="less" scoped>
 .index_wrap {
+  box-sizing: border-box;
   background-color: #fafafa;
   width: 1160px;
   height: 720px;

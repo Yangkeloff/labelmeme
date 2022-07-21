@@ -21,6 +21,7 @@ export default {
 
 <style lang="less" scoped>
 .right_wrap{
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   background-color: #fafafa;

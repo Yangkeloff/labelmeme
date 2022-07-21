@@ -4,6 +4,22 @@
   </div>
 </template>
 
+<script>
+export default {
+  data () {
+    return {
+
+    }
+  },
+  watch: {
+  },
+  mounted () {
+  },
+  methods: {
+  }
+}
+</script>
+
 <style lang="less">
 .pure_btn{
   border: none !important;
