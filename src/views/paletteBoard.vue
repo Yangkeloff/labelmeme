@@ -204,6 +204,7 @@ export default {
         {
           fill: 'transparent',
           stroke: 'rgba(255, 73, 112, 0.9)',
+		      strokeWidth: 4,
           objectCaching: false
         }
       )
@@ -242,9 +243,14 @@ export default {
       points.pop()
       this.canvas.remove(this.currentPolygon)
       if (points.length > 1) {
+        console.log(points)
         const polygon = new fabric.Polygon(points, {
           stroke: 'rgba(255, 73, 112, 0.9)',
-          fill: 'transparent'
+          fill: 'transparent',
+          strokeWidth: 4,
+          transparentCorners: false,
+		      cornerColor: 'green',  
+          cornerStyle:'circle' 
         })
 
         this.canvas.add(polygon)

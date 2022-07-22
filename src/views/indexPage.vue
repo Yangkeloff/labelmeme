@@ -1,19 +1,20 @@
 <template>
   <div class="index_wrap">
     <div class="main_wrap">
-      <!-- <PaletteTest></PaletteTest> -->
-      <PaletteBoard></PaletteBoard>
+      <PaletteTest></PaletteTest>
+      <!-- <PaletteBoard></PaletteBoard> -->
     </div>
     <RightSide></RightSide>
   </div>
 </template>
 
 <script>
-// import PaletteTest from './paletteTest'
+/* eslint-disable */
+import PaletteTest from './paletteTest'
 import PaletteBoard from './paletteBoard'
 import RightSide from './rightSide'
 export default {
-  components: { RightSide, PaletteBoard },
+  components: { RightSide, PaletteBoard, PaletteTest },
   data () {
     return {
 

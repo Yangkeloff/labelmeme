@@ -9,7 +9,7 @@
           <!-- <div :class="{active:drawType=='arrow'}" title="画箭头" @click="drawTypeChange('arrow')">
             <i class="draw-icon icon-1"></i>
           </div> -->
-          <div :class="{active:drawType=='text'}" title="文本输入框" @click="drawTypeChange('text')">
+          <!-- <div :class="{active:drawType=='text'}" title="文本输入框" @click="drawTypeChange('text')">
             <i class="draw-icon icon-2"></i>
           </div>
           <div :class="{active:drawType=='circle'}" title="圆" @click="drawTypeChange('ellipse')">
@@ -20,9 +20,12 @@
           </div>
           <div :class="{active:drawType=='rectangle'}" title="矩形" @click="drawTypeChange('rectangle')">
             <i class="draw-icon icon-4"></i>
-          </div>
-          <div :class="{active:drawType=='polygon'}" title="多边形" @click="drawPolygon">
+          </div> -->
+          <div :class="{active:drawType=='polygon'}" title="绘制多边形" @click="drawPolygon">
             <i class="draw-icon icon-6"></i>
+          </div>
+          <div :class="{active:drawType=='editPoly'}" title="修改多边形" @click="editPoly">
+            <i class="draw-icon icon-edit"></i>
           </div>
           <!-- <div :class="{active:drawType=='pen'}" title="笔画" @click="drawTypeChange('pen')">
             <i class="draw-icon icon-7"></i>
@@ -39,8 +42,22 @@
           <div @click="save" title="保存">
             <i class="draw-icon icon-save"></i>
           </div> -->
+          <el-upload
+          style="height:30px;"
+          action="#"
+          :multiple="false"
+          :show-file-list="false"
+          :limit="1"
+          accept=".json"
+          :auto-upload="false"
+          :on-change="openJson">
+            <el-button title="加载JSON文件" class="pure_btn"><i class="draw-icon icon-upload"></i></el-button>
+          </el-upload>
           <div @click="output" title="输出json">
             <i class="draw-icon icon-json_save"></i>
+          </div>
+          <div @click="clear" title="清空">
+            <i class="draw-icon icon-clear"></i>
           </div>
         </div>
         <canvas id="canvas" :width="width" :height="height"></canvas>
@@ -53,7 +70,9 @@
 </template>
 
 <script>
+/* eslint-disable */
 import FileSaver from 'file-saver'
+import { Edit } from '@/utils/editPolygon'
 export default {
   name: 'paletteTest',
   data () {
@@ -71,7 +90,7 @@ export default {
       canvasObjectIndex: 0,
       textbox: null,
       rectangleLabel: 'warning',
-      drawWidth: 2, // 笔触宽度
+      drawWidth: 3, // 笔触宽度
       color: '#E34F51', // 画笔颜色
       drawingObject: null, // 当前绘制对象
       moveCount: 1, // 绘制移动计数器
@@ -85,7 +104,8 @@ export default {
       line: {},
       delectKlass: {},
       imgFile: {},
-      imgSrc: ''
+      imgSrc: '',
+      curPoly: {}
     }
   },
   watch: {
@@ -274,6 +294,11 @@ export default {
       this.lineArray = new Array() // 线集合
       this.canvas.isDrawingMode = false
     },
+    editPoly() {
+      this.drawType = 'editPoly'
+      this.curPoly = this.canvas.getActiveObject()
+      Edit(this.canvas, this.curPoly)
+    },
     addPoint (e) {
       const random = Math.floor(Math.random() * 10000)
       const id = new Date().getTime() + random
@@ -382,16 +407,40 @@ export default {
         stroke: this.color,
         strokeWidth: this.drawWidth,
         fill: 'rgba(255, 255, 255, 0)',
-        opacity: 1,
-        hasBorders: true,
-        hasControls: false
+        objectCaching: false,
+        transparentCorners: false,
+        cornerColor: 'red'
       })
       this.canvas.add(polygon)
+      this.curPoly = polygon
       this.activeLine = null
       this.activeShape = null
       this.polygonMode = false
       this.doDrawing = false
       this.drawType = null
+
+    },
+    openJson (file) {
+      const _this = this
+      const reader = new FileReader()
+      reader.onload = function () {
+        if (reader.result) {
+          // 初始化画布
+          _this.init()
+          // 反序列化
+          _this.canvas.loadFromJSON(reader.result)
+        }
+      }
+      reader.readAsText(file.raw)
+    },
+    clear () {
+      this.canvas.clear()
+      this.width = 800
+      this.height = 600
+      this.canvas.setDimensions({
+        width: this.width,
+        height: this.height
+      })
     },
     drawing (e) {
       let rect
@@ -689,11 +738,22 @@ canvas {
       background-image: url("../assets/icons/draw/save.png");
       background-size: 80%;
     }
+    .icon-upload {
+      background-image: url("../assets/icons/draw/upload.png");
+      background-size: 70%;
+    }
     .icon-json_save {
       background-image: url("../assets/icons/draw/json_save.png");
       background-size: 80%;
     }
-
+    .icon-clear {
+      background-image: url("../assets/icons/draw/clear.png");
+      background-size: 80%;
+    }
+    .icon-edit {
+      background-image: url("../assets/icons/draw/edit.png");
+      background-size: 75%;
+    }
     .icon-mouse {
       background-image: url("../assets/icons/draw/mouse.png");
       background-size: 60%;
